@@ -8,7 +8,8 @@ up();
 </div>
 <script>
     $(document).ready(function () {
-        if ($('#fec1').val() != "") {
+        //alert($('#fec1').val());
+        if (!$('#fec1').val()) {
             var dat = new Date();
             var dia = dat.getDate();
             var mes = dat.getMonth() + 1;

@@ -125,7 +125,7 @@ $(document).ready(function () {
                 },
                 "destroy": true,
                 "bProcessing": true,
-                "sAjaxSource": "http://localhost/app/ws.php?opcion=getdetalleNevera&listaParametros=".oNev.",'".ofec1."','".ofec2."'",
+                "sAjaxSource": "leeDatosDetalle.php?id=" + oNev + "&fec1=" + ofec1 + "&fec2=" + ofec2,
                 "order": [[0, "desc"]],
                 "aoColumns": [
                     {mData: 'hora'},
@@ -158,7 +158,7 @@ $(document).ready(function () {
                     "previous": "Anterior"}
             },
             "bProcessing": true,
-            "sAjaxSource": "http://localhost/app/ws.php?opcion=getUsu",
+            "sAjaxSource": "leeUsuarios.php",
             "order": [[0, "desc"]],
             "aoColumns": [
                 {mData: 'idSesion'},

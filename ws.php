@@ -1,44 +1,117 @@
 <?php
-require 'lib/nusoap.php';
-$server=new nusoap_server();
-$namespace='http://localhost/app/ws.php';
+require 'lib/library.php';
+  // Recoger parámetros de entrada. Se permite GET y POST
+  $paramOpcion = $_REQUEST['opcion'];
+  $paramLista = $_REQUEST['listaParametros'];
+  $formato = strtolower($_REQUEST['format']) == 'xml' ? 'xml' : 'json';
 
-$server->configureWSDL('MDO.net WebService');
-$server->wsdl->schemaTargetNamespace=$namespace;
+  // Obtener consulta SQL a ejecutar
+  $sql = getSQL($paramOpcion);
+  $sql = aplicarParametrosSQL($sql,$paramLista);
 
-$server->register('HelloWorld',
-array('name'=>'xsd:string'),
-array('return'=>'xsd:string'),
-$namespace,
-false,
-'rpc',
-'encoded',
-'Simple Hello World Method');
+  // Lanzar consulta a la base de datos
+  if ($sql == '')
+    die ('Opcion incorrecta');
+  else
+  {
+    $datos = getArrayDatos($sql);
+    echo formatData($datos,$formato);
+  }
 
-$server->wsdl->addComplexType('MyComplexType','complexType','struct','all','',
-array('ID'=>array('name'=>'ID', 'type' => 'xsd:int'),
-'YourName'=> array('name'=>'YourName','type'=> 'xsd:string')));
-$server->register(
-'HelloComplexWorld',
-array('name'=>'tns:MyComplexType'),
-array('return'=>'tns:MyComplexType'),
-$namespace,
-false,
-'rpc',
-'encoded',
-'Complex Hello World Method');
+ // Dado un nombre de opción, buscar en el xml su SQL correspondiente
+  function getSQL($nombreOpcion)
+  {
+    $xmlOpciones = simplexml_load_file('opciones.xml');
+    $sql = "";
+    foreach ($xmlOpciones->opcion as $opcion)
+    {
+      $nombre = $opcion->nombre;
+      if ($nombre == $nombreOpcion)
+      {
+        $sql = $opcion->SQL;
+        break;
+      }
+    }
+    return $sql;
+  }
 
+  // Aplicar parámetros de la sentencia SQL
+  function aplicarParametrosSQL($sql, $listaPametros)
+  {
+    if ($listaPametros != '')
+    {
+      $arrParam = explode('#',$listaPametros);
+      for ($i=0; $i<count($arrParam); $i++)
+      {
+        $nomParam = '#PARAMETRO_'.($i+1).'#';
+        $valor = $arrParam[$i];
+        $sql = str_replace($nomParam, $valor, $sql);
+      }
+    }
+    return $sql;
+  }
 
-function HelloWorld($name)
-{
-	return 'Hello, World! and ->'.$name;
-}
+ function getArrayDatos($sql)
+  {
+   // $db = mysql_connect('127.0.0.1','root','root') or die('No se pudo conectar con la base de datos');
+   // mysql_select_db('jhpruebas',$db) or die('No se pudo seleccionar la base de datos.');
+    //$resul = mysql_query($sql,$db) or die('Consulta incorrecta:  '.$sql);
+    $resul = mysql_query($sql) or die('Consulta incorrecta:  '.$sql);
 
-function HelloComplexWorld($mycomplextype)
-{
-	return $mycomplextype;
-}
-$POST_DATA=isset($GLOBALS['HTTP_RAW_POST_DATA'])?$GLOBALS['HTTP_RAW_POST_DATA'] : '';
-$server->service($POST_DATA);
-exit();
+    /* create one master array of the records */
+    $datos = array();
+    if(mysql_num_rows($resul))
+    {
+     while($row = mysql_fetch_assoc($resul))
+     {
+      $datos[] = $row;
+     }
+    }
+
+    /* disconnect from the db */
+    @mysql_close($db);
+
+    /* Return data array */
+    return $datos;
+  }
+
+  function formatData($data,$format='json')
+ {
+    if($format == 'json' || $format == 'jsonp')
+    {
+      header('Content-type: application/json');
+      if (isset($_REQUEST['callback']))   // Peticiones ajax
+        return $_REQUEST['callback'].'('.json_encode($data).')';
+      else
+        return json_encode($data);
+    }
+    else
+    {
+      header('Content-type: text/xml');
+      $xml = new SimpleXMLElement('<response/>');
+      return array2xml($data, $xml);
+    }
+  }
+
+  function array2xml($array, $xml = false)
+  {
+    if($xml === false)
+    {
+      $xml = new SimpleXMLElement('<root/>');
+    }
+    foreach($array as $key => $value)
+    {
+      if(is_array($value))
+      {
+        //array2xml($value, $xml->addChild($key));
+        array2xml($value, $xml->addChild('item'));
+      }
+      else
+      {
+        $xml->addChild($key, htmlspecialchars($value));
+      }
+    }
+    return $xml->asXML();
+  }
+
 ?>

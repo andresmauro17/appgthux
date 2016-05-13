@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<OpcionesDisponibles>
+    <opcion>
+        <nombre>getEmp</nombre>
+        <SQL>call `getEmpresas`()</SQL>
+    </opcion>
+    <opcion>
+        <nombre>getUsu</nombre>
+        <SQL>call `getUsuarios`()</SQL>
+    </opcion>
+    <opcion>
+        <nombre>getdatosFinales</nombre>
+        <SQL>call `datosFinales`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>getdetalleNevera</nombre>
+        <SQL>call `detallenevera`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>getgraficoTemp</nombre>
+        <SQL>call `graficotemp`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>validarLogin</nombre>
+        <SQL>call `validarLogin`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>cerrarSesion</nombre>
+        <SQL>call `cerrarSesion`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>editUsuario</nombre>
+        <SQL>call `editUsuarios`(#PARAMETRO_1#)</SQL>
+    </opcion>
+    <opcion>
+        <nombre>editNevera</nombre>
+        <SQL>call `editNevera`(#PARAMETRO_1#)</SQL>
+    </opcion>
+</OpcionesDisponibles>
