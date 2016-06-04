@@ -12,9 +12,11 @@ up();
         if (!$('#fec1').val()) {
             var dat = new Date();
             var dia = dat.getDate();
+            var diareal=("0"+dia.toString()).slice(-2);
             var mes = dat.getMonth() + 1;
+            var mesreal= ("0"+mes.toString()).slice(-2);
             var ano = dat.getFullYear();
-            $('#fec1').val(ano.toString() + "-" + mes.toString() + "-" + dia.toString());
+            $('#fec1').val(ano.toString() + "-" + mesreal + "-" + diareal);
             $('#fec2').val($('#fec1').val());
 
         }

@@ -16,8 +16,6 @@
     </head>
 
     <body>
-
-
         <div class="as_wrapper">
             <h1><a href="">G-Thux Software</a></h1>
             <p>Por favor escriba su usuario y su clave para ingresar al sistema</p>

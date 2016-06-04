@@ -16,9 +16,9 @@ if(isset($_POST['action']) && $_POST['action'] == 'login'){ // Check the action 
 		// NOTE : We have already started the session in the library.php
 		$_SESSION['userid'] 		= $fetch['idUsuarios'];
 		$_SESSION['username'] 	= $fetch['login'];
-                $_SESSION['empresa'] = $fetch['empresa_id'];
-                $_SESSION['tipo'] = $fetch['tipo'];
-                //registro usuario
+        $_SESSION['empresa'] = $fetch['empresa_id'];
+        $_SESSION['tipo'] = $fetch['tipo'];
+        //registro usuario
 		echo 1;
 	}
 }

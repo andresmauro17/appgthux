@@ -42,9 +42,7 @@ $(document).ready(function () {
 
     });
 
-
     $(function () {
-        var oEmp = '2';
          $('#nevera').dataTable({
              "language": {
                  "lengthMenu": "Mostrar _MENU_ registros por pagina",
@@ -63,7 +61,7 @@ $(document).ready(function () {
              },
              "responsive": true,
              "bProcessing": true,
-             "sAjaxSource": "leeDatos.php",
+             "sAjaxSource": "http://localhost/app/ws.php?opcion=getdatosFinales&listaParametros=".$_SESSION['empresa'],
              "order": [[0, "desc"]],
              "aoColumns": [
                  {mData: 'nevera'},
@@ -127,7 +125,7 @@ $(document).ready(function () {
                  },
                  "destroy": true,
                  "bProcessing": true,
-                 "sAjaxSource": "leeDatosDetalle.php?id=" + oNev + "&fec1=" + ofec1 + "&fec2=" + ofec2,
+                 "sAjaxSource": "http://localhost/app/ws.php?opcion=getdetalleNevera&listaParametros=".oNev.",'".ofec1."','".ofec2."'",
                  "order": [[0, "desc"]],
                  "aoColumns": [
                      {mData: 'hora'},
@@ -160,7 +158,7 @@ $(document).ready(function () {
                      "previous": "Anterior"}
              },
              "bProcessing": true,
-             "sAjaxSource": "leeUsuarios.php",
+             "sAjaxSource": "http://localhost/app/ws.php?opcion=getUsu",
              "order": [[0, "desc"]],
              "aoColumns": [
                  {mData: 'idSesion'},

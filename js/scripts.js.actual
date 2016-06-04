@@ -17,34 +17,38 @@ $(document).ready(function () {
                 return false;
             }
             if (username.val() != '' && password.val() != '') { // Check the username and password values is not empty and make the ajax request
-                var UrlToPass = 'action=login&username=' + username.val() + '&password=' + password.val();
-                login_result.html('<span class="error">Ya hizo validacion</span>');
-
-                $.ajax({// Send the credential values to another checker.php using Ajax in POST menthod
-                    type: 'POST',
-                    data: UrlToPass,
-                    url: 'checker.php',
-                    success: function (responseText) { // Get the result and asign to each cases
-                        if (responseText == 0) {
-                            login_result.html('<span class="error">Usuario o clave incorrecto!</span>');
-                        }
-                        else if (responseText == 1) {
-                            window.location = 'userpage.php';
-                        }
-                        else {
-                            alert('Problema con sql query');
-                        }
+alert('ya voy a verificar');
+                getJSON("ws.php?opcion=validarLogin&listaParametros='"+username.val()+"','"+password.val()+"'", function(err, data){
+                    if (err!=null){
+                        login_result.html('<span class="error">Usuario o clave incorrecto!</span>');
+                        //alert('No se pudo validar: '+err);
+                    } else{
+                        //alert(data[0].login);
+                        window.location = 'userpage.php';
                     }
                 });
+
             }
             return false;
         });
 
     });
 
+    var getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+      var status = xhr.status;
+      if (status == 200) {
+        callback(null, xhr.response);
+      } else {
+        callback(status);
+      }
+    };
+    xhr.send();
 
     $(function () {
-        var oEmp = '2';
          $('#nevera').dataTable({
              "language": {
                  "lengthMenu": "Mostrar _MENU_ registros por pagina",
@@ -63,7 +67,7 @@ $(document).ready(function () {
              },
              "responsive": true,
              "bProcessing": true,
-             "sAjaxSource": "leeDatos.php",
+             "sAjaxSource": "http://localhost/app/ws.php?opcion=getdatosFinales&listaParametros=".$_SESSION['empresa'],
              "order": [[0, "desc"]],
              "aoColumns": [
                  {mData: 'nevera'},
@@ -127,7 +131,7 @@ $(document).ready(function () {
                  },
                  "destroy": true,
                  "bProcessing": true,
-                 "sAjaxSource": "leeDatosDetalle.php?id=" + oNev + "&fec1=" + ofec1 + "&fec2=" + ofec2,
+                 "sAjaxSource": "http://localhost/app/ws.php?opcion=getdetalleNevera&listaParametros=".oNev.",'".ofec1."','".ofec2."'",
                  "order": [[0, "desc"]],
                  "aoColumns": [
                      {mData: 'hora'},
@@ -160,7 +164,7 @@ $(document).ready(function () {
                      "previous": "Anterior"}
              },
              "bProcessing": true,
-             "sAjaxSource": "leeUsuarios.php",
+             "sAjaxSource": "http://localhost/app/ws.php?opcion=getUsu",
              "order": [[0, "desc"]],
              "aoColumns": [
                  {mData: 'idSesion'},
